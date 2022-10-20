@@ -4,22 +4,22 @@ class Calculator {
         this.currentElement = currentElement;
         this.clear();
     }
-
+    //clear display for both current and history/previous elements
     clear() {
         this.currentNum = '';
         this.historyNum = '';
         this.operation = undefined;
     }
-
+    //deletes last recored input from click event
     delete() {
         this.currentNum = this.currentNum.toString().slice(0, -1);
     }
-
+    //stores recorded number
     grabNum(number) {
         if (number === '.' && this.currentNum.includes('.')) return;
         this.currentNum = this.currentNum.toString() + number.toString();
     }
-
+    //records operation collected
     operator(operation) {
         if (this.currentNum === '') return;
         if (this.historyNum !== '') {
@@ -29,7 +29,8 @@ class Calculator {
         this.historyNum = this.currentNum;
         this.currentNum = '';
     }
-
+    //based on operator clicked, computation is preformed between 
+    //current+previous/history numbers
     compute() {
         let computation;
         const previous = parseFloat(this.historyNum);
@@ -55,7 +56,8 @@ class Calculator {
         this.operation = undefined;
         this.historyNum = '';
     }
-
+    //grabs numbers, allows placement of . as first selection, adds ',' 
+    //after every 3 digits: example - 3,000,000
     getdisplayNum(number) {
         const stringNum = number.toString()
         const intergerDigits = parseFloat(stringNum.split('.')[0]);
@@ -72,7 +74,7 @@ class Calculator {
             return intergerDisplay;
         }
     }
-
+    //grabs display value to show in current and previous/history
     displayUpdate() {
         this.currentElement.innerText = this.getdisplayNum(this.currentNum);
         if (this.operation != null) {
@@ -82,7 +84,7 @@ class Calculator {
         }
     }
 }
-
+//html elements to reference
 const numberBtns = document.querySelectorAll('[data-value]');
 const operationBtns = document.querySelectorAll('[data-operation]');
 const equalsBtn = document.querySelector('[data-equals]');
@@ -90,33 +92,33 @@ const deleteBtn = document.querySelector('[data-delete]');
 const clearBtn = document.querySelector('[data-clear]');
 const historyElement = document.querySelector('[data-history]');
 const currentElement = document.querySelector('[data-current]');
-
+//for Js class
 const calculator = new Calculator(historyElement, currentElement);
-
+//when any data-value is clicked, records numeric value in html
 numberBtns.forEach(button => {
     button.addEventListener('click', () => {
         calculator.grabNum(button.innerText);
         calculator.displayUpdate();
     })
 })
-
+//when any data-operation is clicked, records operator
 operationBtns.forEach(button => {
     button.addEventListener('click', () => {
         calculator.operator(button.innerText);
         calculator.displayUpdate();
     })
 })
-
+//when equal button is clicked, runs computation and updates displays
 equalsBtn.addEventListener('click', button => {
     calculator.compute();
     calculator.displayUpdate();
 })
-
+//when AC button is clicked, runs clear function and displayUpdate function
 clearBtn.addEventListener('click', button => {
     calculator.clear();
     calculator.displayUpdate();
 })
-
+//when Del is clicked, runs delete function, and displayUpdate function
 deleteBtn.addEventListener('click', button => {
     calculator.delete();
     calculator.displayUpdate();
